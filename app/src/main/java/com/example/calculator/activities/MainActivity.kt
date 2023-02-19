@@ -6,9 +6,25 @@ import com.example.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater)}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.button0.setOnClickListener{setText("0")}
+        binding.button1.setOnClickListener{setText("1")}
+        binding.button2.setOnClickListener{setText("2")}
+        binding.button3.setOnClickListener{setText("3")}
+        binding.button4.setOnClickListener{setText("4")}
+        binding.button5.setOnClickListener{setText("5")}
+        binding.button6.setOnClickListener{setText("6")}
+        binding.button7.setOnClickListener{setText("7")}
+        binding.button8.setOnClickListener{setText("8")}
+        binding.button9.setOnClickListener{setText("9")}
+    }
+
+    fun setText(str: String){
+        binding.text.append(str)
     }
 
 }
