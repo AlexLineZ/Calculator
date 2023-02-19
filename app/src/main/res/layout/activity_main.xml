@@ -18,17 +18,29 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/textScreen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:textSize="57sp"
         android:layout_below="@+id/title"
         android:background="@color/back_black"
         android:textColor="@color/purple_200"
-        android:textSize="57sp"
-        android:paddingLeft="16dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonAC"
+        app:layout_constraintBottom_toTopOf="@id/textResult"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/textResult"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_below="@+id/title"
+        android:background="@color/back_black"
+        android:paddingLeft="16dp"
+        android:textColor="@color/purple_200"
+        app:layout_constraintBottom_toTopOf="@id/buttonAC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textScreen" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/line"
@@ -40,6 +52,7 @@
 
 
     <ImageButton
+        android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +249,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button7"
         app:layout_constraintEnd_toStartOf="@+id/buttonPlusMinus"
         app:layout_constraintStart_toStartOf = "parent"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
+        app:layout_constraintTop_toBottomOf="@+id/textResult" />
 
     <Button
         android:id="@+id/buttonPlusMinus"
@@ -247,7 +260,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintEnd_toStartOf="@+id/line"
         app:layout_constraintStart_toEndOf="@id/buttonAC"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
+        app:layout_constraintTop_toBottomOf="@+id/textResult" />
 
     <Button
         android:id="@+id/buttonPercent"
@@ -258,7 +271,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button9"
         app:layout_constraintEnd_toStartOf="@+id/buttonDevide"
         app:layout_constraintStart_toEndOf="@+id/line"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
+        app:layout_constraintTop_toBottomOf="@+id/textResult" />
 
     <Button
         android:id="@+id/buttonDevide"
@@ -269,7 +282,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonMultiply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/buttonPercent"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
+        app:layout_constraintTop_toBottomOf="@+id/textResult" />
 
     <View
         android:id="@+id/topLine"

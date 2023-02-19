@@ -21,10 +21,44 @@ class MainActivity : AppCompatActivity() {
         binding.button7.setOnClickListener{setText("7")}
         binding.button8.setOnClickListener{setText("8")}
         binding.button9.setOnClickListener{setText("9")}
+        binding.buttonPlus.setOnClickListener{setText("+")}
+        binding.buttonMinus.setOnClickListener{setText("-")}
+        binding.buttonMultiply.setOnClickListener{setText("×")}
+        binding.buttonDevide.setOnClickListener{setText("/")}
+        binding.buttonAC.setOnClickListener{deleteText()}
+        binding.buttonDelete.setOnClickListener { deleteLastSymbol() }
     }
 
     fun setText(str: String){
-        binding.text.append(str)
+        if ((str == "+" || str == "-" || str == "×" || str == "/") && !binding.textScreen.text.toString().isNullOrEmpty()){
+            if (binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '+'
+                || binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '-'
+                || binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '×'
+                || binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '/'){
+
+                val newText = binding.textScreen.text.toString()
+                binding.textScreen.text = newText.substring(0, newText.length - 1)
+                binding.textScreen.append(str)
+
+            }
+            else {
+                binding.textScreen.append(str)
+            }
+        }
+
+        else if (str != "+" && str != "-" && str != "×" && str != "/") {
+            binding.textScreen.append(str)
+        }
     }
 
+    fun deleteText(){
+        binding.textScreen.text = ""
+    }
+
+    fun deleteLastSymbol(){
+        var newText = binding.textScreen.text.toString()
+        if (!newText.isNullOrEmpty()){
+            binding.textScreen.text = newText.substring(0, newText.length - 1)
+        }
+    }
 }
