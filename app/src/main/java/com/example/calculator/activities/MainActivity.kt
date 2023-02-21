@@ -4,12 +4,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculator.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater)}
+
+    var lastOperation = false
+    var isNew = true
+    var previousValue = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.textResult.text = previousValue
 
         binding.button0.setOnClickListener{setText("0")}
         binding.button1.setOnClickListener{setText("1")}
@@ -21,44 +26,66 @@ class MainActivity : AppCompatActivity() {
         binding.button7.setOnClickListener{setText("7")}
         binding.button8.setOnClickListener{setText("8")}
         binding.button9.setOnClickListener{setText("9")}
-        binding.buttonPlus.setOnClickListener{setText("+")}
-        binding.buttonMinus.setOnClickListener{setText("-")}
-        binding.buttonMultiply.setOnClickListener{setText("×")}
-        binding.buttonDevide.setOnClickListener{setText("/")}
+        binding.buttonPlus.setOnClickListener{setOperation("+")}
+        binding.buttonMinus.setOnClickListener{setOperation("-")}
+        binding.buttonMultiply.setOnClickListener{setOperation("×")}
+        binding.buttonDevide.setOnClickListener{setOperation("/")}
+        binding.buttonPlusMinus.setOnClickListener{setMinusOrPlus()}
         binding.buttonAC.setOnClickListener{deleteText()}
         binding.buttonDelete.setOnClickListener { deleteLastSymbol() }
     }
 
-    fun setText(str: String){
-        if ((str == "+" || str == "-" || str == "×" || str == "/") && !binding.textScreen.text.toString().isNullOrEmpty()){
-            if (binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '+'
-                || binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '-'
-                || binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '×'
-                || binding.textScreen.text.toString()[binding.textScreen.text.length - 1] == '/'){
-
-                val newText = binding.textScreen.text.toString()
-                binding.textScreen.text = newText.substring(0, newText.length - 1)
-                binding.textScreen.append(str)
-
-            }
-            else {
-                binding.textScreen.append(str)
-            }
-        }
-
-        else if (str != "+" && str != "-" && str != "×" && str != "/") {
+    private fun setOperation(str: String){
+        println(lastOperation)
+        if (lastOperation){
+            val newText = binding.textScreen.text.toString()
+            binding.textScreen.text = newText.substring(0, newText.length - 1)
             binding.textScreen.append(str)
         }
+
+        if (!binding.textScreen.text.toString().isNullOrEmpty() && !lastOperation){
+            binding.textScreen.append(str)
+            isNew = true
+            lastOperation = true
+        }
     }
 
-    fun deleteText(){
-        binding.textScreen.text = ""
+    private fun setText(str: String) {
+        if (isNew){
+            binding.textScreen.text = ""
+            isNew = false
+        }
+        binding.textScreen.append(str)
+        lastOperation = false
     }
 
-    fun deleteLastSymbol(){
+    private fun setMinusOrPlus() {
+        if (binding.textScreen.text.isNullOrEmpty()){
+            return
+        }
+        else if (binding.textScreen.text[0] == '-'){
+            binding.textScreen.text = binding.textScreen.text.substring(1, binding.textScreen.text.length)
+        }
+        else {
+            binding.textScreen.text = "-" + binding.textScreen.text
+        }
+    }
+
+    private fun deleteText() {
+        if (lastOperation){
+            lastOperation = false
+        }
+        binding.textScreen.text = "0"
+        isNew = true
+    }
+
+    private fun deleteLastSymbol() {
         var newText = binding.textScreen.text.toString()
         if (!newText.isNullOrEmpty()){
             binding.textScreen.text = newText.substring(0, newText.length - 1)
+            if (lastOperation){
+                lastOperation = false
+            }
         }
     }
 }
