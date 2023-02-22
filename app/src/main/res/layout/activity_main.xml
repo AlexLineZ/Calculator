@@ -40,6 +40,8 @@
         android:layout_below="@+id/title"
         android:background="@color/back_black"
         android:paddingLeft="16dp"
+        android:textSize="30sp"
+        android:gravity="center_vertical"
         android:textColor="@color/purple_200"
         app:layout_constraintBottom_toTopOf="@id/buttonAC"
         app:layout_constraintStart_toStartOf="parent"
