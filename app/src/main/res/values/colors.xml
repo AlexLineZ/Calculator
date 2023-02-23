@@ -11,4 +11,8 @@
     <color name="button_1">#4A4458</color>
     <color name="button_2">#633B48</color>
     <color name="color_line">#49454F</color>
+    <color name="text_btn_color">#E8DEF8</color>
+    <color name="text_screen_color">#D0BCFF</color>
+    <color name="error_color">#F2B8B5</color>
+    <color name="label_color">#E6E1E5</color>
 </resources>

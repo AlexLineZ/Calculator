@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_black">
+    android:background="@color/back_black"
+    android:screenOrientation="portrait">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
+        android:textStyle="bold"
         android:text="@string/calculator"
         android:textAlignment="viewStart"
-        android:textColor="@color/white"
+        android:textColor="@color/label_color"
         android:textSize="28sp"
         tools:ignore="MissingConstraints" />
 
@@ -27,7 +29,7 @@
         android:textSize="57sp"
         android:layout_below="@+id/title"
         android:background="@color/back_black"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/text_screen_color"
         app:layout_constraintBottom_toTopOf="@id/textResult"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

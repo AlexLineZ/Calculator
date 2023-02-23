@@ -10,6 +10,7 @@ open class MainActivity : AppCompatActivity() {
 
     var lastOperation = false
     var isNew = true
+    var isSetComma = false
     var previousValue = ""
     var typeOfOperation = ""
 
@@ -61,13 +62,20 @@ open class MainActivity : AppCompatActivity() {
                 setOperation("/")
             }
         }
+
+        binding.buttonComma.setOnClickListener{setComma()}
         binding.buttonPlusMinus.setOnClickListener{setMinusOrPlus()}
         binding.buttonAC.setOnClickListener{deleteText()}
-        binding.buttonDelete.setOnClickListener { deleteLastSymbol() }
+        binding.buttonDelete.setOnClickListener{deleteLastSymbol()}
         binding.buttonEquals.setOnClickListener{clickEqualOrOperation()}
     }
 
     private fun setOperation(str: String){
+
+        if (binding.textScreen.text == "Error"){
+            deleteText()
+        }
+
         if (lastOperation){
             val newText = binding.textScreen.text.toString()
             binding.textScreen.text = newText.substring(0, newText.length - 1)
@@ -79,6 +87,7 @@ open class MainActivity : AppCompatActivity() {
             previousValue = binding.textScreen.text.toString()
             binding.textScreen.append(str)
             typeOfOperation = str
+            isSetComma = false
             isNew = true
             lastOperation = true
         }
@@ -91,6 +100,14 @@ open class MainActivity : AppCompatActivity() {
         }
         binding.textScreen.append(str)
         lastOperation = false
+    }
+
+    private fun setComma(){
+        if (!isSetComma && binding.textScreen.text.isNotEmpty()) {
+            isSetComma = true
+            isNew = false
+            binding.textScreen.append(".")
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -113,6 +130,7 @@ open class MainActivity : AppCompatActivity() {
         binding.textScreen.text = "0"
         previousValue = ""
         typeOfOperation = ""
+        isSetComma = false
         isNew = true
     }
 
@@ -121,6 +139,11 @@ open class MainActivity : AppCompatActivity() {
         if (newText == "Error"){
             deleteText()
         }
+
+        else if (newText.isNotEmpty() && newText[newText.length - 1] == '.'){
+            isSetComma = false
+        }
+
         else if (newText.isNotEmpty()){
             binding.textScreen.text = newText.substring(0, newText.length - 1)
             if (lastOperation){
@@ -140,12 +163,14 @@ open class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun clickEqualOrOperation() {
         var nowValue = binding.textScreen.text.toString()
+
         if (nowValue[nowValue.length - 1] == '+'
             || nowValue[nowValue.length - 1] == '-'
             || nowValue[nowValue.length - 1] == '×'
             || nowValue[nowValue.length - 1] == '/'){
             setError()
         }
+
         when(typeOfOperation){
             "+" -> binding.textScreen.text = formatNumber(previousValue.toDouble() + nowValue.toDouble())
             "-" -> binding.textScreen.text = formatNumber(previousValue.toDouble() - nowValue.toDouble())
