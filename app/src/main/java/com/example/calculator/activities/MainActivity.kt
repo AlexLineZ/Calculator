@@ -1,11 +1,14 @@
 package com.example.calculator.activities
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.calculator.R
 import com.example.calculator.databinding.ActivityMainBinding
 
-open class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater)}
 
     var lastOperation = false
@@ -18,6 +21,7 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
 
         binding.button0.setOnClickListener{setText("0")}
         binding.button1.setOnClickListener{setText("1")}
@@ -63,6 +67,7 @@ open class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.buttonPercent.setOnClickListener{setPercent()}
         binding.buttonComma.setOnClickListener{setComma()}
         binding.buttonPlusMinus.setOnClickListener{setMinusOrPlus()}
         binding.buttonAC.setOnClickListener{deleteText()}
@@ -127,6 +132,8 @@ open class MainActivity : AppCompatActivity() {
         if (lastOperation){
             lastOperation = false
         }
+        val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
+        binding.textScreen.setTextColor(baseColor)
         binding.textScreen.text = "0"
         previousValue = ""
         typeOfOperation = ""
@@ -154,6 +161,8 @@ open class MainActivity : AppCompatActivity() {
     }
 
     fun setError(){
+        val errorColor = ContextCompat.getColor(this, R.color.error_color)
+        binding.textScreen.setTextColor(errorColor)
         binding.textScreen.text = "Error"
         lastOperation = false
         typeOfOperation = ""
@@ -184,6 +193,8 @@ open class MainActivity : AppCompatActivity() {
 
     fun formatNumber(num: Double): String {
         if (num == Double.POSITIVE_INFINITY || num == Double.NEGATIVE_INFINITY){
+            val errorColor = ContextCompat.getColor(this, R.color.error_color)
+            binding.textScreen.setTextColor(errorColor)
             return "Error"
         }
         return if (num == num.toInt().toDouble()) {
@@ -193,4 +204,10 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun setPercent(){
+        if (previousValue.isNotEmpty()){
+            val nowValue = binding.textScreen.text.toString()
+            binding.textScreen.text = formatNumber(previousValue.toDouble() * nowValue.toDouble() / 100)
+        }
+    }
 }
