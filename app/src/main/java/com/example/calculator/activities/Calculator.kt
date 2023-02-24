@@ -12,7 +12,7 @@ class Calculator {
 
     fun addOperation(str: String, nowValue: String) : String{
         return if (previousValue.isNotEmpty() && typeOfOperation.isNotEmpty()){
-            clickEqualOrOperation(nowValue)
+            clickEqualOrOperation(str, nowValue)
         } else {
             setOperation(str, nowValue)
         }
@@ -39,14 +39,12 @@ class Calculator {
 
 
     fun setMinusOrPlus(nowValue: String) : String{
-        if (nowValue.isNullOrEmpty()){
-            return nowValue
-        }
-        else if (nowValue[0] == '-'){
-            return nowValue.substring(1, nowValue.length)
-        }
-        else {
-            return "-$nowValue"
+        return if (nowValue.isNullOrEmpty()){
+            nowValue
+        } else if (nowValue[0] == '-'){
+            nowValue.substring(1, nowValue.length)
+        } else {
+            "-$nowValue"
         }
     }
 
@@ -73,11 +71,11 @@ class Calculator {
             return deleteText()
         }
 
-        else if (nowValue.isNotEmpty() && nowValue[nowValue.length - 1] == '.'){
+        if (nowValue.isNotEmpty() && nowValue[nowValue.length - 1] == '.'){
             isSetComma = false
         }
 
-        else if (nowValue.isNotEmpty()){
+        if (nowValue.isNotEmpty()){
             if (lastOperation){
                 lastOperation = false
                 typeOfOperation = ""
@@ -94,14 +92,30 @@ class Calculator {
         return "Error"
     }
 
-    fun clickEqualOrOperation(nowValue: String) : String{
+    fun clickEqualOrOperation(str: String, nowValue: String) : String{
         var newText = ""
 
-        if (nowValue[nowValue.length - 1] == '+'
+        if (str == "=" && (nowValue.isEmpty() || nowValue == "Error" || isNew)){
+            return deleteText()
+        }
+
+        if ((nowValue[nowValue.length - 1] == '+'
             || nowValue[nowValue.length - 1] == '-'
             || nowValue[nowValue.length - 1] == '×'
-            || nowValue[nowValue.length - 1] == '/'){
-            return setError()
+            || nowValue[nowValue.length - 1] == '/')
+            && str != "="){
+            newText = nowValue.substring(0, nowValue.length - 1)
+            newText += str
+            typeOfOperation = str
+            return newText
+        }
+
+        else if ((nowValue[nowValue.length - 1] == '+'
+                 || nowValue[nowValue.length - 1] == '-'
+                 || nowValue[nowValue.length - 1] == '×'
+                 || nowValue[nowValue.length - 1] == '/')
+                 && str == "="){
+                return setError()
         }
 
         when(typeOfOperation){
@@ -136,6 +150,7 @@ class Calculator {
             lastOperation = true
             return nowValue + str
         }
+
         else {
             return nowValue
         }
@@ -145,6 +160,7 @@ class Calculator {
         if (num == Double.POSITIVE_INFINITY || num == Double.NEGATIVE_INFINITY){
             return "Error"
         }
+
         return if (num == num.toInt().toDouble()) {
             num.toInt().toString()
         } else {
