@@ -21,6 +21,7 @@ class Calculator {
     fun setText(str: String, nowValue: String) : String {
         if (isNew){
             isNew = false
+            lastOperation = false
             return str
         }
         var newText = nowValue + str
@@ -95,7 +96,7 @@ class Calculator {
     fun clickEqualOrOperation(str: String, nowValue: String) : String{
         var newText = ""
 
-        if (str == "=" && (nowValue.isEmpty() || nowValue == "Error" || isNew)){
+        if (str == "=" && (nowValue.isEmpty() || nowValue == "Error" || isNew || typeOfOperation.isEmpty())){
             return deleteText()
         }
 
@@ -123,6 +124,10 @@ class Calculator {
             "-" -> newText = formatNumber(previousValue.toDouble() - nowValue.toDouble())
             "×" -> newText = formatNumber(previousValue.toDouble() * nowValue.toDouble())
             "/" -> newText = formatNumber(previousValue.toDouble() / nowValue.toDouble())
+        }
+
+        if (!isInt(newText)){
+            isSetComma = true
         }
 
         previousValue = nowValue
@@ -165,6 +170,15 @@ class Calculator {
             num.toInt().toString()
         } else {
             num.toString()
+        }
+    }
+
+    fun isInt(value: String): Boolean {
+        return try {
+            value.toInt()
+            true
+        } catch (e: NumberFormatException) {
+            false
         }
     }
 }
