@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import kotlin.math.max
 
 class Calculator {
-    private val maxSymbols = 21
     private var lastOperation = false
     private var isNew = true
     private var isSetComma = false
     private var previousValue = ""
     private var typeOfOperation = ""
     private val errorMessage = "Error"
+    private val maxSymbols = 21
     private val operators = listOf('+', '-', '×', '/')
 
     fun addOperation(str: String, nowValue: String) : String{
