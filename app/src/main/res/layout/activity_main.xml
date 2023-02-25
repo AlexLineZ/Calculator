@@ -24,6 +24,7 @@
         android:layout_height="0dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        android:maxLength="22"
         android:text="0"
         android:textSize="57sp"
         android:layout_below="@+id/title"
@@ -40,13 +41,14 @@
         android:layout_height="95dp"
         android:layout_below="@+id/title"
         android:background="@color/back_black"
-        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
         android:textSize="30sp"
         android:gravity="center_vertical"
         android:textColor="@color/purple_200"
         app:layout_constraintBottom_toTopOf="@id/buttonAC"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textScreen" />
+        app:layout_constraintTop_toBottomOf="@id/textScreen"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/line"

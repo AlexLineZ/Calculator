@@ -1,14 +1,17 @@
 package com.example.calculator.activities
 
 import android.annotation.SuppressLint
+import kotlin.math.max
 
 class Calculator {
+    private val maxSymbols = 21
     private var lastOperation = false
     private var isNew = true
     private var isSetComma = false
     private var previousValue = ""
     private var typeOfOperation = ""
     private val errorMessage = "Error"
+    private val operators = listOf('+', '-', '×', '/')
 
     fun addOperation(str: String, nowValue: String) : String{
         return if (previousValue.isNotEmpty() && typeOfOperation.isNotEmpty()){
@@ -24,11 +27,18 @@ class Calculator {
             lastOperation = false
             return str
         }
+        if (nowValue.length >= maxSymbols){
+            lastOperation = false
+            return nowValue
+        }
         lastOperation = false
         return nowValue + str
     }
 
     fun setComma(nowValue: String) : String{
+        if (nowValue == errorMessage){
+            return deleteText()
+        }
         if (!isSetComma && nowValue.isNotEmpty()) {
             isSetComma = true
             isNew = false
@@ -39,6 +49,9 @@ class Calculator {
 
 
     fun setMinusOrPlus(nowValue: String) : String{
+        if (nowValue == errorMessage || isNew){
+            return deleteText()
+        }
         return if (nowValue.isNullOrEmpty()){
             nowValue
         } else if (nowValue[0] == '-'){
@@ -58,10 +71,11 @@ class Calculator {
     }
 
     fun setPercent(nowValue: String) : String {
-        if (nowValue[nowValue.length - 1] == '+'
-            || nowValue[nowValue.length - 1] == '-'
-            || nowValue[nowValue.length - 1] == '×'
-            || nowValue[nowValue.length - 1] == '/'){
+        if (nowValue == errorMessage){
+            return deleteText()
+        }
+
+        if (nowValue[nowValue.length - 1] in operators){
             return setError()
         }
 
@@ -72,7 +86,7 @@ class Calculator {
     }
 
     fun deleteLastSymbol(nowValue: String): String {
-        if (nowValue == "Error"){
+        if (nowValue == errorMessage){
             return deleteText()
         }
 
@@ -102,23 +116,15 @@ class Calculator {
             return nowValue
         }
 
-        if ((nowValue[nowValue.length - 1] == '+'
-            || nowValue[nowValue.length - 1] == '-'
-            || nowValue[nowValue.length - 1] == '×'
-            || nowValue[nowValue.length - 1] == '/')
-            && str != "="){
+        if (nowValue[nowValue.length - 1] in operators && str != "="){
             newText = nowValue.substring(0, nowValue.length - 1)
             newText += str
             typeOfOperation = str
             return newText
         }
 
-        else if ((nowValue[nowValue.length - 1] == '+'
-                 || nowValue[nowValue.length - 1] == '-'
-                 || nowValue[nowValue.length - 1] == '×'
-                 || nowValue[nowValue.length - 1] == '/')
-                 && str == "="){
-                return setError()
+        else if (nowValue[nowValue.length - 1] in operators && str == "="){
+           return setError()
         }
 
         when(typeOfOperation){
@@ -146,10 +152,9 @@ class Calculator {
     }
 
     private fun setOperation(str: String, nowValue: String) : String {
-        if (nowValue == "Error"){
+        if (nowValue == errorMessage){
             return deleteText()
         }
-
         else if (lastOperation){
             var newText = nowValue.substring(0, nowValue.length - 1)
             newText += str
@@ -157,7 +162,6 @@ class Calculator {
 
             return newText
         }
-
         else if (nowValue.isNotEmpty() && !lastOperation){
             previousValue = nowValue
             typeOfOperation = str
@@ -167,13 +171,14 @@ class Calculator {
 
             return nowValue + str
         }
-
         else {
             return nowValue
         }
     }
 
     private fun setError() : String{
+        isNew = true
+        isSetComma = false
         lastOperation = false
         typeOfOperation = ""
         previousValue = ""
@@ -181,7 +186,7 @@ class Calculator {
     }
 
     private fun formatNumber(num: Double): String {
-        if (num == Double.POSITIVE_INFINITY || num == Double.NEGATIVE_INFINITY){
+        if (num == Double.POSITIVE_INFINITY || num == Double.NEGATIVE_INFINITY || num.isNaN()){
             return setError()
         }
 

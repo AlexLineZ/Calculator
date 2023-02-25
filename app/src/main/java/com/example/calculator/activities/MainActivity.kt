@@ -11,7 +11,7 @@ import com.example.calculator.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater)}
     var calculator = Calculator()
-    val errorMessage = "Error"
+    private val errorMessage = "Error"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
