@@ -8,7 +8,7 @@ class Calculator {
     private var isSetComma = false
     private var previousValue = ""
     private var typeOfOperation = ""
-
+    private val errorMessage = "Error"
 
     fun addOperation(str: String, nowValue: String) : String{
         return if (previousValue.isNotEmpty() && typeOfOperation.isNotEmpty()){
@@ -24,9 +24,8 @@ class Calculator {
             lastOperation = false
             return str
         }
-        var newText = nowValue + str
         lastOperation = false
-        return newText
+        return nowValue + str
     }
 
     fun setComma(nowValue: String) : String{
@@ -50,17 +49,22 @@ class Calculator {
     }
 
     fun deleteText() : String{
-        if (lastOperation){
-            lastOperation = false
-        }
         previousValue = ""
         typeOfOperation = ""
         isSetComma = false
         isNew = true
+        lastOperation = false
         return "0"
     }
 
     fun setPercent(nowValue: String) : String {
+        if (nowValue[nowValue.length - 1] == '+'
+            || nowValue[nowValue.length - 1] == '-'
+            || nowValue[nowValue.length - 1] == '×'
+            || nowValue[nowValue.length - 1] == '/'){
+            return setError()
+        }
+
         if (previousValue.isNotEmpty()) {
             return formatNumber(previousValue.toDouble() * nowValue.toDouble() / 100)
         }
@@ -86,18 +90,16 @@ class Calculator {
         return nowValue
     }
 
-    private fun setError() : String{
-        lastOperation = false
-        typeOfOperation = ""
-        previousValue = ""
-        return "Error"
-    }
 
     fun clickEqualOrOperation(str: String, nowValue: String) : String{
         var newText = ""
 
-        if (str == "=" && (nowValue.isEmpty() || nowValue == "Error" || isNew || typeOfOperation.isEmpty())){
+        if (str == "=" && (nowValue.isEmpty() || nowValue == "Error" || isNew)){
             return deleteText()
+        }
+
+        if (str == "=" && typeOfOperation.isEmpty()){
+            return nowValue
         }
 
         if ((nowValue[nowValue.length - 1] == '+'
@@ -130,9 +132,17 @@ class Calculator {
             isSetComma = true
         }
 
-        previousValue = nowValue
-        typeOfOperation = ""
-        return newText
+        return if (str == "="){
+            previousValue = nowValue
+            typeOfOperation = ""
+            newText
+        } else {
+            previousValue = newText
+            isNew = true
+            lastOperation = true
+            typeOfOperation = str
+            newText + str
+        }
     }
 
     private fun setOperation(str: String, nowValue: String) : String {
@@ -144,6 +154,7 @@ class Calculator {
             var newText = nowValue.substring(0, nowValue.length - 1)
             newText += str
             typeOfOperation = str
+
             return newText
         }
 
@@ -153,6 +164,7 @@ class Calculator {
             isSetComma = false
             isNew = true
             lastOperation = true
+
             return nowValue + str
         }
 
@@ -161,9 +173,16 @@ class Calculator {
         }
     }
 
+    private fun setError() : String{
+        lastOperation = false
+        typeOfOperation = ""
+        previousValue = ""
+        return errorMessage
+    }
+
     private fun formatNumber(num: Double): String {
         if (num == Double.POSITIVE_INFINITY || num == Double.NEGATIVE_INFINITY){
-            return "Error"
+            return setError()
         }
 
         return if (num == num.toInt().toDouble()) {
@@ -173,7 +192,7 @@ class Calculator {
         }
     }
 
-    fun isInt(value: String): Boolean {
+    private fun isInt(value: String): Boolean {
         return try {
             value.toInt()
             true

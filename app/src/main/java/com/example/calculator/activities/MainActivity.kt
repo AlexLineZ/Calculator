@@ -102,9 +102,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonPercent.setOnClickListener{
-            val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
-            binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setPercent(binding.textScreen.text.toString())
+            var test = calculator.setPercent(binding.textScreen.text.toString())
+            if (test == errorMessage){
+                val errorColor = ContextCompat.getColor(this, R.color.error_color)
+                binding.textScreen.setTextColor(errorColor)
+                binding.textScreen.text = test
+            }
+            else {
+                val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
+                binding.textScreen.setTextColor(baseColor)
+                binding.textScreen.text = test
+            }
         }
 
         binding.buttonComma.setOnClickListener{
