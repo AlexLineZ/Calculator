@@ -20,89 +20,89 @@ class MainActivity : AppCompatActivity() {
         binding.button0.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("0", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("0")
         }
 
         binding.button1.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("1", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("1")
         }
 
         binding.button2.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("2", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("2")
         }
 
         binding.button3.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("3", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("3")
         }
 
         binding.button4.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("4", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("4")
         }
 
         binding.button5.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("5", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("5")
         }
 
         binding.button6.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("6", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("6")
         }
 
         binding.button7.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("7", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("7")
         }
 
         binding.button8.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("8", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("8")
         }
 
         binding.button9.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setText("9", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setText("9")
         }
 
         binding.buttonPlus.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-           binding.textScreen.text = calculator.addOperation("+", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.addOperation("+")
         }
 
         binding.buttonMinus.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.addOperation("-", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.addOperation("-")
         }
 
         binding.buttonMultiply.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.addOperation("×", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.addOperation("×")
         }
 
         binding.buttonDevide.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.addOperation("/", binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.addOperation("/")
         }
 
         binding.buttonPercent.setOnClickListener{
-            var test = calculator.setPercent(binding.textScreen.text.toString())
+            var test = calculator.setPercent()
             if (test == errorMessage){
                 val errorColor = ContextCompat.getColor(this, R.color.error_color)
                 binding.textScreen.setTextColor(errorColor)
@@ -118,13 +118,13 @@ class MainActivity : AppCompatActivity() {
         binding.buttonComma.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setComma(binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setComma()
         }
 
         binding.buttonPlusMinus.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.setMinusOrPlus(binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.setMinusOrPlus()
         }
 
         binding.buttonAC.setOnClickListener{
@@ -136,11 +136,11 @@ class MainActivity : AppCompatActivity() {
         binding.buttonDelete.setOnClickListener{
             val baseColor = ContextCompat.getColor(this, R.color.text_screen_color)
             binding.textScreen.setTextColor(baseColor)
-            binding.textScreen.text = calculator.deleteLastSymbol(binding.textScreen.text.toString())
+            binding.textScreen.text = calculator.deleteLastSymbol()
         }
 
         binding.buttonEquals.setOnClickListener{
-            var test = calculator.clickEqualOrOperation("=", binding.textScreen.text.toString())
+            var test = calculator.clickEqualOrOperation("=")
             if (test == errorMessage){
                 val errorColor = ContextCompat.getColor(this, R.color.error_color)
                 binding.textScreen.setTextColor(errorColor)
