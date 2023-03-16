@@ -1,8 +1,8 @@
 package com.example.calculator.activities
 
-import android.annotation.SuppressLint
-import java.util.jar.Attributes.Name
-import kotlin.math.max
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class Calculator {
     private var isNew = true
@@ -15,56 +15,58 @@ class Calculator {
     private val errorMessage = "Error"
     private val operators = listOf('+', '-', '×', '/')
 
-    fun addOperation(operation: String) : String{
-        return if (previousValue.isNotEmpty() && typeOfOperation.isNotEmpty()){
-            clickEqualOrOperation(operation)
-        } else {
-            setOperation(operation)
+    private val _isError = MutableLiveData<Boolean>(false)
+    val isError: LiveData<Boolean> = _isError
+
+    fun addOperation(operation: NameButtons): String {
+        return when (operation) {
+            NameButtons.PERCENT -> {
+                setPercent()
+            }
+            NameButtons.COMMA -> {
+                setComma()
+            }
+            NameButtons.AC -> {
+                deleteText()
+            }
+            NameButtons.PLUSMINUS -> {
+                setMinusOrPlus()
+            }
+            NameButtons.DELETE -> {
+                deleteLastSymbol()
+            }
+            NameButtons.EQUAL -> {
+                clickEqualOrOperation(operation)
+            }
+            else -> {
+                if (previousValue.isNotEmpty() && typeOfOperation.isNotEmpty()) {
+                    clickEqualOrOperation(operation)
+                } else {
+                    setOperation(operation)
+                }
+            }
         }
     }
 
-    fun addAnotherOperation(operation: String) : String {
-        when (operation) {
-            NameButtons.PERCENT.symbol -> {
-                return setPercent()
-            }
-            NameButtons.COMMA.symbol -> {
-                return setComma()
-            }
-            NameButtons.AC.symbol -> {
-                return deleteText()
-            }
-            NameButtons.PLUSMINUS.symbol -> {
-                return setMinusOrPlus()
-            }
-            NameButtons.DELETE.symbol -> {
-                return deleteLastSymbol()
-            }
-            NameButtons.EQUAL.symbol -> {
-                return clickEqualOrOperation(operation)
-            }
-        }
-        return deleteText()
-    }
-
-    fun setText(symbol: String) : String {
-        if (isNew){
+    fun setText(number: NameButtons): String {
+        _isError.value = false
+        if (isNew) {
             isNew = false
             isLastOperation = false
-            nowValue = symbol
+            nowValue = number.symbol
             return nowValue
         }
-        if (nowValue.length >= maxSymbols){
+        if (nowValue.length >= maxSymbols) {
             isLastOperation = false
             return nowValue
         }
         isLastOperation = false
-        nowValue += symbol
+        nowValue += number.symbol
         return nowValue
     }
 
-    private fun setComma() : String{
-        if (nowValue == errorMessage){
+    private fun setComma(): String {
+        if (nowValue == errorMessage) {
             return deleteText()
         }
         if (!isSetComma && nowValue.isNotEmpty()) {
@@ -76,14 +78,14 @@ class Calculator {
         return nowValue
     }
 
-    private fun setMinusOrPlus() : String{
-        if (nowValue == errorMessage || isNew){
+    private fun setMinusOrPlus(): String {
+        if (nowValue == errorMessage || isNew) {
             return deleteText()
         }
 
-        return if (nowValue.isEmpty()){
+        return if (nowValue.isEmpty()) {
             nowValue
-        } else if (nowValue[0] == '-'){
+        } else if (nowValue[0] == '-') {
             nowValue = nowValue.substring(1, nowValue.length)
             nowValue
         } else {
@@ -92,40 +94,41 @@ class Calculator {
         }
     }
 
-    private fun deleteText() : String{
+    private fun deleteText(): String {
         nowValue = ""
         previousValue = ""
         typeOfOperation = ""
         isSetComma = false
         isNew = true
         isLastOperation = false
+        _isError.value = false
         return "0"
     }
 
-    private fun setPercent() : String {
-        return if (nowValue == errorMessage){
-            deleteText()
-        } else if (nowValue[nowValue.length - 1] in operators){
-            setError()
+    private fun setPercent(): String {
+        if (nowValue == errorMessage) {
+            return deleteText()
+        } else if (nowValue[nowValue.length - 1] in operators) {
+            return setError()
         } else if (previousValue.isNotEmpty()) {
             nowValue = formatNumber(previousValue.toDouble() * nowValue.toDouble() / 100)
-            nowValue
+            return nowValue
         } else {
-            nowValue
+            return nowValue
         }
     }
 
     private fun deleteLastSymbol(): String {
-        if (nowValue == errorMessage){
+        if (nowValue == errorMessage) {
             return deleteText()
         }
 
-        if (nowValue.isNotEmpty() && nowValue[nowValue.length - 1] == '.'){
+        if (nowValue.isNotEmpty() && nowValue[nowValue.length - 1] == '.') {
             isSetComma = false
         }
 
-        if (nowValue.isNotEmpty()){
-            if (isLastOperation){
+        if (nowValue.isNotEmpty()) {
+            if (isLastOperation) {
                 isLastOperation = false
                 typeOfOperation = ""
             }
@@ -135,95 +138,91 @@ class Calculator {
         return nowValue
     }
 
+    //я не стал сокращать эту функцию, потому что объединить эти случаи в один было очень удобно
+    //но сделал ее чуть более читабельной
+    private fun clickEqualOrOperation(operation: NameButtons): String {
+        if (operation == NameButtons.EQUAL) {
+            if (nowValue.isEmpty() || nowValue == errorMessage || isNew) {
+                return deleteText()
+            }
+            if (typeOfOperation.isEmpty()) {
+                return nowValue
+            }
+            if (nowValue[nowValue.length - 1] in operators) {
+                return setError()
+            }
+        } else if (nowValue[nowValue.length - 1] in operators) {
+            nowValue = nowValue.substring(0, nowValue.length - 1)
+            nowValue += operation
+            typeOfOperation = operation.symbol
+            return nowValue
+        }
 
-    private fun clickEqualOrOperation(operation: String) : String{
         var newText = ""
-
-        if (operation == "=" && (nowValue.isEmpty() || nowValue == errorMessage || isNew)){
-            return deleteText()
-        }
-
-        if (operation == "=" && typeOfOperation.isEmpty()){
-            return nowValue
-        }
-
-        if (nowValue[nowValue.length - 1] in operators && operation != "="){
-            newText = nowValue.substring(0, nowValue.length - 1)
-            newText += operation
-            typeOfOperation = operation
-            nowValue = newText
-            return nowValue
-        }
-
-        else if (nowValue[nowValue.length - 1] in operators && operation == "="){
-           return setError()
-        }
-
-        when(typeOfOperation){
+        when (typeOfOperation) {
             "+" -> newText = formatNumber(previousValue.toDouble() + nowValue.toDouble())
             "-" -> newText = formatNumber(previousValue.toDouble() - nowValue.toDouble())
             "×" -> newText = formatNumber(previousValue.toDouble() * nowValue.toDouble())
             "/" -> newText = formatNumber(previousValue.toDouble() / nowValue.toDouble())
         }
 
-        if (!isInt(newText)){
+        if (!isInt(newText)) {
             isSetComma = true
         }
 
-        return if (operation == "="){
+        return if (operation == NameButtons.EQUAL) {
             previousValue = nowValue
             typeOfOperation = ""
             nowValue = newText
+
             nowValue
-        } else if (newText == errorMessage){
-            setError()
         } else {
             previousValue = newText
             isNew = true
             isLastOperation = true
-            typeOfOperation = operation
-            nowValue = newText + operation
+            typeOfOperation = operation.symbol
+            nowValue = newText + operation.symbol
+
             nowValue
         }
     }
 
-    private fun setOperation(operation: String) : String {
-        if (nowValue == errorMessage){
+    private fun setOperation(operation: NameButtons): String {
+        if (nowValue == errorMessage) {
             return deleteText()
-        }
-        else if (isLastOperation){
+        } else if (isLastOperation) {
             var newText = nowValue.substring(0, nowValue.length - 1)
             newText += operation
-            typeOfOperation = operation
+            typeOfOperation = operation.symbol
             nowValue = newText
             return nowValue
-        }
-        else if (nowValue.isNotEmpty() && !isLastOperation){
+        } else if (nowValue.isNotEmpty() && !isLastOperation) {
             previousValue = nowValue
-            typeOfOperation = operation
+            typeOfOperation = operation.symbol
             isSetComma = false
             isNew = true
             isLastOperation = true
-            nowValue += operation
+            nowValue += operation.symbol
             return nowValue
-        }
-        else {
+        } else {
             return nowValue
         }
     }
 
-    private fun setError() : String {
+    private fun setError(): String {
         isNew = true
         isSetComma = false
         isLastOperation = false
         nowValue = errorMessage
         typeOfOperation = ""
         previousValue = ""
+
+        _isError.value = true
         return errorMessage
     }
 
     private fun formatNumber(value: Double): String {
-        if (value == Double.POSITIVE_INFINITY || value == Double.NEGATIVE_INFINITY || value.isNaN()){
+        if (value == Double.POSITIVE_INFINITY || value == Double.NEGATIVE_INFINITY || value.isNaN()) {
             return setError()
         }
 
@@ -242,4 +241,5 @@ class Calculator {
             false
         }
     }
+
 }
